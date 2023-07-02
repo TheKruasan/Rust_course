@@ -1,9 +1,14 @@
 
 fn main(){
+    //function with few if controls
     multiple_if();
+    //iteration on array with while and index
     array_iteration();
+    //iteration in array with for
     another_array_iteration();
+    //example of using loop for
     loop_for();
+    //example of using while
     endless_loop();
 }
 
