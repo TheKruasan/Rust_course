@@ -73,7 +73,7 @@ fn main() {
     let six = plus_one(five);
     let none = plus_one(None);
 
-    fn plus_one(x: Option<i32>) -> Option<i32> {
+    fn plus_one_2(x: Option<i32>) -> Option<i32> {
         match x {
             Some(i) => Some(i + 1),
         }
@@ -81,7 +81,7 @@ fn main() {
 
 
     //we can't use this code because match have to describe all variants of variable
-    fn plus_one(x: Option<i32>) -> Option<i32> {
+    fn plus_one_1(x: Option<i32>) -> Option<i32> {
         match x {
             Some(i) => Some(i + 1),
         }
@@ -91,7 +91,7 @@ fn main() {
     
 }
 
-def placehold(){
+fn placehold(){
 
     let dice_roll = 9;
 
