@@ -35,7 +35,7 @@ pub struct Config {
 
 impl Config {
     //create new entity of config with arguments from command line
-    fn build(args: &[String]) -> Result<Config, &'static str> {
+    pub fn build(args: &[String]) -> Result<Config, &'static str> {
         if args.len() < 3 {
             return Err("not enough arguments");//throw error
         }
