@@ -19,7 +19,7 @@ fn counter_ex(){
     let mut handles = vec![];//create vector of threads
 
     // for _ in 0..10 {
-    //     let handle = thread::spawn(move || {//we cant use the data from mutex in few threads
+    //     let handle = thread::spawn(move || {
     //         let mut num = counter.lock().unwrap();
 
     //         *num += 1;
