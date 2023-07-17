@@ -1,0 +1,8 @@
+{
+    "rust-analyzer.linkedProjects": [
+        ".\\smart_pointers\\Cargo.toml",
+        ".\\smart_pointers\\Cargo.toml",
+        ".\\smart_pointers\\Cargo.toml"
+    ],
+    "rust-analyzer.showUnlinkedFileNotification": false
+}

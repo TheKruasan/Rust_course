@@ -1,3 +1,6 @@
+use rand::Rng;
+use std::cmp::Ordering;
+use std::io;
 fn main() {
     let home: IpAddr = "127.0.0.1"
         .parse()
@@ -27,9 +30,7 @@ fn main() {
 
 
 
-use rand::Rng;
-use std::cmp::Ordering;
-use std::io;
+
 
 fn sec() {
     println!("Guess the number!");
