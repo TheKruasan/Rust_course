@@ -2,6 +2,7 @@ use std::cell::RefCell;
 use std::rc::{Rc, Weak};
 
 #[derive(Debug)]
+//declare a Node struct
 struct Node {
     value: i32,
     parent: RefCell<Weak<Node>>,
@@ -9,6 +10,7 @@ struct Node {
 }
 
 fn main() {
+    //create a ref to Node struct
     let leaf = Rc::new(Node {
         value: 3,
         parent: RefCell::new(Weak::new()),
@@ -22,6 +24,7 @@ fn main() {
     );
 
     {
+        //ref to struct Node
         let branch = Rc::new(Node {
             value: 5,
             parent: RefCell::new(Weak::new()),
