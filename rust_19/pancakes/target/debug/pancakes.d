@@ -1,0 +1,1 @@
+D:\Rust_learning\rust_19\pancakes\target\debug\pancakes.exe: D:\Rust_learning\rust_19\hello_macro\hello_macro_derive\src\lib.rs D:\Rust_learning\rust_19\hello_macro\src\lib.rs D:\Rust_learning\rust_19\pancakes\src\main.rs
