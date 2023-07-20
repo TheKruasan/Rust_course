@@ -43,7 +43,7 @@ impl ThreadPool {
     {
         //it is job that recirver will be do
         let job = Box::new(f);
-        //send work to any not busy reciever
+        //send work to any not busy reciver
         self.sender.as_ref().unwrap().send(job).unwrap();
     }
 }
@@ -53,7 +53,7 @@ impl Drop for ThreadPool {
     fn drop(&mut self) {
         //deop sender of threadpool
         drop(self.sender.take());
-        //shut down all recievers in this pool
+        //shut down all recivers in this pool
         for worker in &mut self.workers {
             println!("Shutting down worker {}", worker.id);
 
@@ -65,7 +65,7 @@ impl Drop for ThreadPool {
     }
 }
 
-//creuct of reciever
+//struct of reciver
 struct Worker {
     id: usize,
     thread: Option<thread::JoinHandle<()>>,
