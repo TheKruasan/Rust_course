@@ -10,18 +10,21 @@ lazy_static! {
     pub static ref BANKS: RwLock<HashMap<u32, Bank>> = {
         let mut m = HashMap::new();
         RwLock::new(m)
+        
     };
+    
 }
 #[derive(Debug)]
 pub struct Bank {
     pub id: u32,
     pub balance: u32,
-    pub accounts: HashMap<u32, BankAccount>,
+    pub accounts: Arc<RwLock<HashMap<u32, BankAccount>>>,
     // pub thread: Option<thread::JoinHandle<()>>,
 }
 
 impl Bank {
-    fn new(id: u32, balance: u32, accounts: HashMap<u32, BankAccount>) -> Bank {
+    fn new(id: u32, balance: u32, accs: HashMap<u32, BankAccount>) -> Bank {
+        let accounts = Arc::new(RwLock::new(accs));
         // let thread = thread::spawn(move || loop {
         //     let message = receiver.lock().unwrap().recv();
 
@@ -54,16 +57,22 @@ impl Bank {
 
         if request.target_bank_id != self.id {
             self.accounts
+                .write()
+                .unwrap()
                 .get_mut(&request.account_id)
                 .expect("error in add_request")
                 .substruct_from_balance(request.value);
             self.send_target_to_another_bank(request.target_bank_id, target)
         } else {
             self.accounts
+                .write()
+                .unwrap()
                 .get_mut(&request.account_id)
                 .expect("error in add_request")
                 .substruct_from_balance(request.value);
             self.accounts
+                .write()
+                .unwrap()
                 .get_mut(&request.target_account_id)
                 .expect("error in add_request")
                 .add_to_balance(request.value);
@@ -74,32 +83,34 @@ impl Bank {
         let (sender, receiver) = mpsc::channel();
 
         let receiver = Arc::new(Mutex::new(receiver));
-
+        println!("1 in send_target_to_another_bank");
         // TODO: fix it
         BANKS
-            .read()
+            .write()
             .expect("error in send_target_to_another_bank")
             .get(&target_bank_id)
             .expect("error in send_target_to_another_bank")
             .set_reciever(Arc::clone(&receiver));
-        println!("in send_target_to_another_bank");
+        println!("2 in send_target_to_another_bank");
         sender
             .send(target)
             .expect("error in send_target_to_another_bank");
     }
 
     pub fn set_reciever(&self, receiver: Arc<Mutex<mpsc::Receiver<Target>>>) {
-        let mut accounts = self.accounts.clone();
-
+        println!("in set_reciever");
+        let mut acc = self.accounts;
         thread::spawn(move || loop {
             let message = receiver.lock().unwrap().recv();
             println!("got message");
             match message {
                 Ok(job) => {
-                    accounts
+                    acc
+                        .write()
+                        .unwrap()
                         .get_mut(&job.target_account)
                         .expect("error in set_reciever")
-                        .change_balance(0 - job.value);
+                        .add_to_balance(job.value);
                     break;
                 }
                 Err(_) => {
@@ -129,10 +140,12 @@ impl BankAccount {
     }
 
     pub fn substruct_from_balance(&mut self, value: u32) {
+        println!("delete some value to {}",value);
         self.balance -= value;
     }
 
     pub fn add_to_balance(&mut self, value: u32) {
+        println!("add some value to {}",value);
         self.balance += value;
     }
 }

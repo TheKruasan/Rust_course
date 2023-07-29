@@ -1,4 +1,4 @@
-use std::{collections::HashMap, thread};
+use std::{collections::HashMap, sync::RwLock, thread, time::Duration};
 
 use banks::{Bank, TransferBetweenAccounts, BANKS, BankAccount};
 
@@ -38,17 +38,21 @@ fn main() {
             accounts: accounts.clone(),
         },
     );
+    
 
 
     
     for request in requests {
-        BANKS
-            .write()
-            .expect("error in main")
+        let mut banks = BANKS.read().unwrap().clone();
+        banks
             .get_mut(&request.0)
             .expect("No bank")
             .add_request(request.1);
+        thread::sleep(Duration::from_secs(2));
+        let mut b = banks.clone();
+        
+        println!("{:#?}",banks);
     }
 
-    println!("{:#?}", BANKS.read().unwrap());
+    // println!("{:#?}", BANKS.read().unwrap());
 }
