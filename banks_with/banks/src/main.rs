@@ -1,58 +1,49 @@
-use std::{collections::HashMap, sync::RwLock, thread, time::Duration};
+use std::{collections::HashMap, thread, time::Duration};
 
-use banks::{Bank, TransferBetweenAccounts, BANKS, BankAccount};
+use banks::bank_tools::{
+    all_banks::BANKS, bank::Bank, bank_account::BankAccount, transaction::Transaction,
+};
 
 fn main() {
+    // creating a mock data ===========================
+    create_mock_data();
+    let mock_transaction = Transaction {
+        account_id: 1,
+        target_bank_id: 2,
+        target_account_id: 1,
+        value: 123,
+    };
+    let all_banks = BANKS.read().unwrap();
+    // =================================
 
-    let requests = vec![(
+    // send a transaction
+    let bank_from = all_banks.get(&1).unwrap();
+    bank_from.send_transaction(mock_transaction);
+
+    // wait for result
+    thread::sleep(Duration::from_secs(4));
+    // check result
+    let banks = BANKS.read().unwrap();
+    println!("{:#?}", banks);
+}
+// creates a mock data for tests
+fn create_mock_data(){
+    let mut all_banks = BANKS.write().unwrap();
+    let mut mock_accounts = HashMap::new();
+    mock_accounts.insert(
         1,
-        TransferBetweenAccounts {
-            account_id: 1,
-            target_bank_id: 2,
-            target_account_id: 2,
-            value: 12,
-        },
-    )];
-    let mut accounts = HashMap::new();
-    accounts.insert(1, BankAccount{
-        id: 1,
-        balance: 100
-    });
-    accounts.insert(2, BankAccount{
-        id: 2,
-        balance: 100
-    });
-    BANKS.write().unwrap().insert(
-        1,
-        Bank {
+        BankAccount {
             id: 1,
-            balance: 20000,
-            accounts: accounts.clone(),
+            balance: 1000,
         },
     );
-    BANKS.write().unwrap().insert(
+    mock_accounts.insert(
         2,
-        Bank {
+        BankAccount {
             id: 2,
-            balance: 20000,
-            accounts: accounts.clone(),
+            balance: 1000,
         },
     );
-    
-
-
-    
-    for request in requests {
-        let mut banks = BANKS.read().unwrap().clone();
-        banks
-            .get_mut(&request.0)
-            .expect("No bank")
-            .add_request(request.1);
-        thread::sleep(Duration::from_secs(2));
-        let mut b = banks.clone();
-        
-        println!("{:#?}",banks);
-    }
-
-    // println!("{:#?}", BANKS.read().unwrap());
+    (*all_banks).insert(1, Bank::new(1, 100, mock_accounts.clone()));
+    (*all_banks).insert(2, Bank::new(2, 100, mock_accounts.clone()));
 }
