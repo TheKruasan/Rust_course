@@ -8,4 +8,9 @@ lazy_static! {
         let map = HashMap::new();
         Arc::new(RwLock::new(map))
     };
+
+    // pub static ref BANKS: Arc<HashMap<u32, RwLock<Bank>>> = {
+    //     let map = HashMap::new();
+    //     Arc::new(map)
+    // };
 }

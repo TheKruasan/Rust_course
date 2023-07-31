@@ -18,17 +18,15 @@ fn main() {
 
     // send a transaction
     let bank_from = all_banks.get(&1).unwrap();
+    println!("{:?}",bank_from);
     bank_from.send_transaction(mock_transaction);
-
     // wait for result
     thread::sleep(Duration::from_secs(4));
     // check result
-    let banks = BANKS.read().unwrap();
-    println!("{:#?}", banks);
+    println!("{:#?}", BANKS.read().unwrap());
 }
 // creates a mock data for tests
 fn create_mock_data(){
-    let mut all_banks = BANKS.write().unwrap();
     let mut mock_accounts = HashMap::new();
     mock_accounts.insert(
         1,
@@ -44,6 +42,6 @@ fn create_mock_data(){
             balance: 1000,
         },
     );
-    (*all_banks).insert(1, Bank::new(1, 100, mock_accounts.clone()));
-    (*all_banks).insert(2, Bank::new(2, 100, mock_accounts.clone()));
+    BANKS.write().unwrap().insert(1, Bank::new(1, 100, mock_accounts.clone()));
+    BANKS.write().unwrap().insert(2, Bank::new(2, 100, mock_accounts.clone()));
 }
