@@ -7,11 +7,13 @@ pub struct BankAccount {
 impl BankAccount {
     /// Substract value from account balance
     pub fn substruct_from_balance(&mut self, value: u32) {
+        println!("delete some value");
         self.balance -= value;
     }
 
     /// Add value to account balance
     pub fn add_to_balance(&mut self, value: u32) {
+        println!("add some value");
         self.balance += value;
     }
 }
